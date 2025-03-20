@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const connectDB = require("./config/database/");
+const connectDB = require("./config/database");
 
 const taskRoutes = require("./routes/taskRoutes");
 
