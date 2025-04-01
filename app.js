@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const connectDB = require("./config/database");
 
 const taskRoutes = require("./routes/taskRoutes");
+const technologyRoutes = require("./routes/technologyRoutes");
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 
 // Rotas
 app.use("/api/tasks", taskRoutes);
+app.use("/api/technologies", technologyRoutes);
 
 // Porta
 const PORT = process.env.PORT || 5000;
