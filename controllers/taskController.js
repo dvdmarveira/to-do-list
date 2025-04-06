@@ -29,15 +29,38 @@ exports.getTaskById = async (req, res) => {
   }
 };
 
+// @desc    Update task
+// @route   UPDATE /api/tasks/:id
+// @access  Public
+exports.updateTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!updatedTask)
+      return res.status(404).json({ message: "Task não encontrada" });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Erro ao atualizar task", error: error.message });
+  }
+};
+
 // @desc    Create new task
 // @route   POST /api/tasks
 // @access  Public
 exports.createTask = async (req, res) => {
-  const { title, description, status } = req.body;
+  const { taskTitle, status } = req.body;
   try {
     const task = new Task({
-      title,
-      description,
+      taskTitle,
       status,
     });
     await task.save();

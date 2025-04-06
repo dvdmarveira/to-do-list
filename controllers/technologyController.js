@@ -14,6 +14,24 @@ exports.getTechnologies = async (req, res) => {
   }
 };
 
+// @desc    Check if technology exists
+// @route   GET /api/technologies/check/:name
+// @access  Public
+
+exports.checkTechnologyExists = async (req, res) => {
+  try {
+    const technology = await Technology.findOne({
+      name: { $regex: new RegExp(`^${req.params.name}$`, "i") },
+    });
+    res.status(200).json({ exists: !!technology });
+  } catch (error) {
+    res.status(500).json({
+      error: "Erro na verificação",
+      message: error.message,
+    });
+  }
+};
+
 // @desc    Get single technology
 // @route   GET /api/technologies/:id
 // @access  Public
@@ -33,17 +51,27 @@ exports.getTechnologyById = async (req, res) => {
 // @route   POST /api/technologies
 // @access  Public
 exports.createTechnology = async (req, res) => {
-  const { title, description, area } = req.body;
+  const { name, description, area } = req.body;
   try {
     const technology = new Technology({
-      title,
+      name,
       description,
       area,
     });
     await technology.save();
     res.status(201).json(technology);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    if (err.code === 11000) {
+      res.status(400).json({
+        message: `A tecnologia '${name}' já existe (comparação case-insensitive)`,
+      });
+    } else {
+      res.status(400).json({
+        message: err.message.includes("validation failed") // Erros de validação do Mongoose
+          ? "Dados inválidos: verifique os campos obrigatórios e as restrições"
+          : err.message,
+      });
+    }
   }
 };
 

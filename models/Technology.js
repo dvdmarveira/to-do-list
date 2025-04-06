@@ -4,12 +4,13 @@ const mongoose = require("mongoose");
 
 const technologySchema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
     },
     description: {
       type: String,
+      required: true,
     },
     area: {
       type: String,
@@ -19,6 +20,15 @@ const technologySchema = new mongoose.Schema(
   },
   {
     timestamps: true, // createdAt e updatedAt
+    collation: { locale: "pt", strength: 2 },
+  }
+);
+
+technologySchema.index(
+  { name: 1 },
+  {
+    unique: true,
+    collation: { locale: "pt", strength: 2 }, // Força busca case-insensitive
   }
 );
 

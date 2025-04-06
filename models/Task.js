@@ -4,16 +4,13 @@ const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
   {
-    title: {
+    taskTitle: {
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-    },
     status: {
       type: String,
-      enum: ["pending", "in progress", "done"],
+      enum: ["pending", "in progress", "completed"],
       required: true,
     },
   },
